@@ -6,6 +6,18 @@ import numpy as np
 from model import fetch_data, train_svm_model, predict_population
 
 def app():
+ 
+    # ======= DATA PREPARATION ======= 
+    df = fetch_data(
+        table_name="status_perkawinan",
+        feature_columns=["id_tahun"],
+        target_columns=["status_kawin", "cerai_hidup"]
+    ).sort_values("id_tahun")
+    
+    # Hitung perubahan
+    df["% Perubahan Kawin"] = df["status_kawin"].pct_change() * 100
+    df["% Perubahan Cerai"] = df["cerai_hidup"].pct_change() * 100
+    
     # ======= TABEL DETAIL =======
     st.header("Detail Data Historis")
     
@@ -52,4 +64,3 @@ def app():
 
     st.write("*% Δ Kawin : presentase perubahan jumlah status kawin dari data sebelumnya")
     st.write("*% Δ Cerai : presentase perubahan jumlah status cerai dari data sebelumnya")
-    

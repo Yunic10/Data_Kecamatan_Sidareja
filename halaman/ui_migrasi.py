@@ -5,7 +5,18 @@ import plotly.graph_objects as go
 import numpy as np
 from model import fetch_data, train_svm_model, predict_population
 
-def app():
+def app():    
+    # ======= DATA PREPARATION ======= 
+    df = fetch_data(
+        table_name="migrasi",
+        feature_columns=["id_tahun"],
+        target_columns=["migrasi_masuk", "migrasi_keluar"]
+    ).sort_values("id_tahun")
+    
+    # Hitung perubahan
+    df["% Perubahan Masuk"] = df["migrasi_masuk"].pct_change() * 100
+    df["% Perubahan Keluar"] = df["migrasi_keluar"].pct_change() * 100
+    
     # ======= TABEL DETAIL =======
     st.header("Detail Data Historis")
     
@@ -52,4 +63,5 @@ def app():
 
     st.write("*% Δ Masuk : presentase perubahan jumlah penduduk masuk dari data sebelumnya")
     st.write("*% Δ Keluar : presentase perubahan jumlah penduduk keluar dari data sebelumnya")
+    
     

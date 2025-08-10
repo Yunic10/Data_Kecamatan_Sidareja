@@ -17,6 +17,18 @@ def style_negative_positive(val):
     return f'color: {color}'
 
 def app(): 
+    # ======= DATA PREPARATION ======= 
+    df = fetch_data(
+        table_name="keluarga",
+        feature_columns=["id_tahun"],
+        target_columns=["pria", "wanita", "jumlah_kepala_keluarga"]
+    ).sort_values("id_tahun")
+    
+    # Calculate jumlah_kepala_keluargas and changes
+    df['jumlah_kepala_keluarga'] = df['pria'] + df['wanita']
+    df["% Perubahan Pria"] = df["pria"].pct_change() * 100
+    df["% Perubahan Wanita"] = df["wanita"].pct_change() * 100
+    df["% Perubahan jumlah_kepala_keluarga"] = df["jumlah_kepala_keluarga"].pct_change() * 100
     # ======= HISTORICAL DATA TABLE =======
     st.header("Data Historis")
     

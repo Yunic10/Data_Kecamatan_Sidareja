@@ -6,6 +6,16 @@ import numpy as np
 from model import fetch_data, train_svm_model, predict_population
 
 def app():
+    # ======= DATA PREPARATION ======= 
+    df = fetch_data(
+        table_name="putus_sekolah",
+        feature_columns=["id_tahun"],
+        target_columns=["jumlah_putus_sekolah"]
+    ).sort_values("id_tahun")
+    
+    # Hitung perubahan
+    df["% Perubahan"] = df["jumlah_putus_sekolah"].pct_change() * 100
+    
         # ======= TABEL DETAIL =======
     st.header("Detail Data Historis")
 
@@ -61,5 +71,3 @@ def app():
     )
 
     st.write("*% perubahan : presentase perubahan jumlah anak putus sekolah dari data sebelumnya")
-    
-  

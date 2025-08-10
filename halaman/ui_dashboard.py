@@ -13,6 +13,18 @@ SUPABASE_KEY = os.getenv('SUPABASE_KEY')  # Menggunakan environment variable unt
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def app():
+     # Ambil data tahunan untuk grafik
+    df= fetch_data(
+        table_name="penduduk_tahunan", 
+        feature_columns= ["id_tahun"], 
+        target_columns= ["jumlah_penduduk", "laki_laki", "perempuan"]
+        ).sort_values("id_tahun")
+    
+    # Calculate jumlah_penduduks and changes
+    df['Jumlah Penduduk'] = df['laki_laki'] + df['perempuan']
+    df["% Perubahan Laki_laki"] = df["laki_laki"].pct_change() * 100
+    df["% Perubahan Perempuan"] = df["perempuan"].pct_change() * 100
+    df["% Perubahan Jumlah Penduduk"] = df["jumlah_penduduk"].pct_change() * 100
     # ======= DETAIL TABLE =======
     st.header("Data Historis")
 
